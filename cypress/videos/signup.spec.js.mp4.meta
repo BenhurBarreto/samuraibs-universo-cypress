@@ -1,0 +1,11 @@
+;FFMETADATA1
+[CHAPTER]
+TIMEBASE=1/1000
+START=-13016
+END=6598
+title=cadastro quando o usuário é novato deve cadastrar um novo usuário
+[CHAPTER]
+TIMEBASE=1/1000
+START=11531
+END=26270
+title=cadastro quando o email já existe não deve cadastrar o usuário
