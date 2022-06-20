@@ -25,7 +25,7 @@ describe('cadastro', function () {
             signupPage.go()
             signupPage.form(user)
             signupPage.submit()
-            signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para seus agendamentos!')
+            signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         })
     })
 
@@ -38,18 +38,7 @@ describe('cadastro', function () {
         }
 
         before(function () {
-            cy.task('removeUser', user.email)
-                .then(function (result) {
-                    console.log(result)
-                })
-
-            cy.request(
-                'POST',
-                'http://localhost:3333/users',
-                user
-            ).then(function (response) {
-                expect(response.status).to.eq(200)
-            })
+            cy.postUser(user)
         })
 
         it('não deve cadastrar o usuário', function () {
