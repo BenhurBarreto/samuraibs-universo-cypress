@@ -5,16 +5,16 @@ import signupPage from '../support/pages/signup'
 
 describe('cadastro', function () {
 
-    context('quando o usuário é novato', function () {
+    before(function() {
+        cy.fixture('papito').then(function(papito) {
+            this.papito = papito
+        })
+    })
 
-        const user = {
-            name: 'Benhur Barreto',
-            email: 'benhurbbs@gmail.com',
-            password: 'pwd123'
-        }
+    context.only('quando o usuário é novato', function () {
 
         before(function () {
-            cy.task('removeUser', user.email)
+            cy.task('removeUser', this.papito.email)
                 .then(function (result) {
                     console.log(result)
                 })
@@ -23,7 +23,7 @@ describe('cadastro', function () {
         it('deve cadastrar um novo usuário', function () {
 
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.papito)
             signupPage.submit()
             signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         })
