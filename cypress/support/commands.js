@@ -28,13 +28,25 @@ import moment from 'moment'
 
 import { apiServer } from '../../cypress.json'
 
+import loginPage from './pages/login'
+import dashPage from './pages/dash'
+
+// App Actions
+Cypress.Commands.add('uiLogin', function (user) {
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+
+    dashPage.header.userLoggedIn(user.name)
+})
+
 Cypress.Commands.add('postUser', function (user) {
     cy.task('removeUser', user.email)
         .then(function (result) {
             console.log(result)
         })
 
-    cy.request( {
+    cy.request({
         method: 'POST',
         url: apiServer + '/users',
         body: user
@@ -64,7 +76,7 @@ Cypress.Commands.add('recoveryPass', function (email) {
 Cypress.Commands.add('createAppointment', function (hour) {
     let now = new Date()
     now.setDate(now.getDate() + 1)
-    
+
     Cypress.env('appointmentDay', now.getDate())
 
     const date = moment(now).format(`YYYY-MM-DD ${hour}:00`)
