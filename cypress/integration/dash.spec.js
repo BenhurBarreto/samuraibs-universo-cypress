@@ -1,5 +1,6 @@
 
 import loginPage from '../support/pages/login'
+import dashPage from '../support/pages/dash'
 
 describe('dashboard', function () {
     context('quando o cliente faz um agendamento no app mobile', function () {
@@ -16,7 +17,8 @@ describe('dashboard', function () {
                 email: 'ramon@televisa.com',
                 password: 'pwd123',
                 is_provider: true
-            }
+            },
+            appointmentHour: '14:00'
         }
 
         before(function () {
@@ -24,10 +26,9 @@ describe('dashboard', function () {
             cy.postUser(data.costumer)
 
             cy.apiLogin(data.costumer)
-            cy.log('conseguimos pegar o token ' + Cypress.env('apiToken'))
 
             cy.setProviderId(data.provider.email)
-            cy.createAppointment()
+            cy.createAppointment(data.appointmentHour)
         })
 
         it('o mesmo deve ser exibido no dashboard', function () {
@@ -35,19 +36,26 @@ describe('dashboard', function () {
             loginPage.go()
             loginPage.form(data.provider)
             loginPage.submit()
-            
-            cy.wait(3000)            
+
+            dashPage.calendarShouldBeVisible()
+
+            const day = Cypress.env('appointmentDay')
+            dashPage.selectDay(day)
+
+            dashPage.appointmentShouldBeVisible(data.costumer, data.appointmentHour)
         })
     })
 })
 
 import moment from 'moment'
 
-Cypress.Commands.add('createAppointment', function () {
+Cypress.Commands.add('createAppointment', function (hour) {
     let now = new Date()
     now.setDate(now.getDate() + 1)
     
-    const date = moment(now).format('YYYY-MM-DD 14:00:00')
+    Cypress.env('appointmentDay', now.getDate())
+
+    const date = moment(now).format('YYYY-MM-DD ' + hour + ':00')
 
     const payload = {
         provider_id: Cypress.env('providerId'),
