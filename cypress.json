@@ -1,6 +1,6 @@
 {
-    "baseUrl": "http://localhost:3000",
-    "apiServer": "http://localhost:3333",
+    "baseUrl": "https://samurai-web-benhur.herokuapp.com",
+    "apiServer": "https://samuraibs-api-benhur.herokuapp.com",
     "viewportWidth": 1440,
     "viewportHeight": 900,
     "dbConfig": {
