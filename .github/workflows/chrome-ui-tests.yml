@@ -10,14 +10,40 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   chrome-ui-tests:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    strategy:
+      fail-fast: false
+      matrix:
+        # run copies of the current job in parallel
+        containers: [1]
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: List file projects
-        run: ls -l
+      - name: Ping API
+        # You may pin to the exact commit or the version.
+        # uses: Leocardoso94/is-my-site-up@dd9b46848d4e3e871dfb20cf98de8fa6caf35324
+        uses: Leocardoso94/is-my-site-up@v1.2
+        with:
+          # Site's url
+          site: https://samuraibs-api-benhur.herokuapp.com
+
+      - name: 'UI Tests - Chrome'
+        uses: cypress-io/github-action@v4
+        with:
+          # we have already installed all dependencies above
+          install-command: yarn install
+          wait-on: 'https://samurai-web-benhur.herokuapp.com/'
+          wait-on-timeout: 120
+          browser: chrome
+          record: true
+          parallel: true
+          group: 'UI - Chrome'
+          spec: cypress/integration/*
+        env:
+          TZ: America/Sao_Paulo
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
