@@ -9,7 +9,7 @@ class DashPage {
     }
 
     calendarShouldBeVisible() {
-        cy.get(el.calendar, { timeout: 7000 })
+        cy.get(el.calendar)
             .should('be.visible')
     }
 
@@ -77,7 +77,7 @@ class DashPage {
         cy.log(lastDayOfMonth.toString())
 
         const target = new RegExp('^' + appointmentDate.getDate() + '$', 'g')
-        cy.contains(el.boxDay, target, { timeout: 7000 })
+        cy.contains(el.boxDay, target)
             .click({ force: true })
     }
 

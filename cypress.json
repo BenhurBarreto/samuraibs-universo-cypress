@@ -3,6 +3,7 @@
     "apiServer": "https://samuraibs-api-benhur.herokuapp.com",
     "viewportWidth": 1440,
     "viewportHeight": 900,
+    "defaultCommandTimeout": 30000,
     "dbConfig": {
         "host": "jelani.db.elephantsql.com",
         "user": "copkixlq",
